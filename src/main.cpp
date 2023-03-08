@@ -1,13 +1,12 @@
 #include <Arduino.h>
 #include <WiFi.h>
 
-#include "webserver.h"
 
 // Some global variables (i know, bad practice etc.)
 
 int powerPin = 12;
 
-int powerLEDPin = 11;
+int powerLEDPin = 14;
 
 // WiFi credentias
 
@@ -23,15 +22,12 @@ String header;
 
 unsigned long currentTime = millis();
 
-WebServer webServer = WebServer("test");
+//WebServer webServer = WebServer("test");
 
-
-void powerOn() {
-  Serial.println("Turning PC on... one moment");
-}
-
-void powerOff() {
-  Serial.println("Turning PC off... one moment");
+void shortPress() {
+  digitalWrite(powerPin, HIGH);
+  delay(500);
+  digitalWrite(powerPin, LOW);
 }
 
 void longPress() {
@@ -51,7 +47,7 @@ bool isPoweredOn() {
 
 void setup() {
   // put your setup code here, to run once:
-  // TODO: Setup WiFi and Serial stuff
+  // TODO: Setup WiFi
 
   Serial.begin(115200);
 
@@ -59,8 +55,15 @@ void setup() {
 
   Serial.println("Connecting to WiFi...");
 
+  Serial.println("Setting pin modes...");
+  
+  pinMode(powerPin, OUTPUT);
+  pinMode(powerLEDPin, INPUT);
+
   Serial.println("Checking initial power state...");
 
+  delay(1000); // wait one second for esp to init
+  
   if (isPoweredOn()) {
     Serial.println("System already turned on");
   } else {
