@@ -7,8 +7,13 @@ WebServer::WebServer(String title) {
 
 String WebServer::generateWebsite(bool powerStatus) {
 
-    WebServer::genBody(powerStatus);
     WebServer::genHeader();
+
+    return WebServer::updateSite(powerStatus);
+}
+
+String WebServer::updateSite(bool isOn) {
+    WebServer::genBody(isOn);
 
     String webContent = "<!DOCTYPE html><html>" + WebServer::header + WebServer::body + "</html>";
 

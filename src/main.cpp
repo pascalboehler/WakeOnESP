@@ -91,5 +91,7 @@ void loop() {
     Serial.println("off");
   }
   delay(5000);
+  Serial.println("The current website shown is: ");
+  Serial.println(webServer.updateSite(isPoweredOn()));
 }
 
