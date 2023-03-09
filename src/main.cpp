@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include "webserver.h"
 
 
 // Some global variables (i know, bad practice etc.)
@@ -22,7 +23,7 @@ String header;
 
 unsigned long currentTime = millis();
 
-//WebServer webServer = WebServer("test");
+WebServer webServer = WebServer("testing");
 
 void shortPress() {
   digitalWrite(powerPin, HIGH);
@@ -55,6 +56,12 @@ void setup() {
 
   Serial.println("Connecting to WiFi...");
 
+  Serial.println("Initing the webserver...");
+
+  //webServer = WebServer("tets");
+
+  webServer.areYouAlive();
+
   Serial.println("Setting pin modes...");
   
   pinMode(powerPin, OUTPUT);
@@ -62,7 +69,7 @@ void setup() {
 
   Serial.println("Checking initial power state...");
 
-  delay(1000); // wait one second for esp to init
+  delay(1000); // wait one second for esp to init => this just needs some time
   
   if (isPoweredOn()) {
     Serial.println("System already turned on");
@@ -71,6 +78,9 @@ void setup() {
   }
 
   Serial.println("Done.");
+
+  Serial.println("The website code we will display: ");
+  Serial.println(webServer.generateWebsite(isPoweredOn()));
 }
 
 void loop() {
