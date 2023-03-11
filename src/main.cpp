@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include "webserver.h"
+#include "datahelper.h"
 
 
 // Some global variables (i know, bad practice etc.)
@@ -8,11 +9,6 @@
 int powerPin = 12;
 
 int powerLEDPin = 14;
-
-// WiFi credentias
-
-const char* ssid = "NETWORK";
-const char* pass = "PASSWORD";
 
 // WebServer on port 80
 
@@ -24,6 +20,8 @@ String header;
 unsigned long currentTime = millis();
 
 WebServer webServer = WebServer("testing");
+
+DataHelper datahelper;
 
 void shortPress() {
   digitalWrite(powerPin, HIGH);
@@ -54,9 +52,52 @@ void setup() {
 
   Serial.println("Starting up system...");
 
+  Serial.println("Initializing PFISS...");
+
+  if (datahelper.initFS() == 0) {
+    Serial.println("Initalized FS");
+  } else {
+    Serial.println("Error occured initializing, abording startup");
+    return;
+  }
+
+  if (datahelper.loadDotEnv() == 0) {
+    Serial.println("Loaded environment file");
+  } else {
+    Serial.println("Error loading environment files, aborting");
+    return;
+  }
+
   Serial.println("Connecting to WiFi...");
 
-  Serial.println("Initing the webserver...");
+  Serial.println("Loading credentials...");
+
+  std::array<char*, 2> credentials = datahelper.getWiFiCredentials();
+
+  char* ssid = credentials[0];
+  char* pass = credentials[0];
+
+  Serial.println(ssid);
+
+  Serial.println(pass);
+
+  Serial.print("Connecting");
+
+  WiFi.begin(ssid, pass);
+
+  while(WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+
+  Serial.println("Connected");
+
+  Serial.print("Your IP is: ");
+
+  Serial.println(WiFi.localIP().toString());
+
+  Serial.println("Initiating the webserver...");
 
   //webServer = WebServer("tets");
 
@@ -84,6 +125,14 @@ void setup() {
 }
 
 void loop() {
+  WiFiClient client = server.available();
+
+  if (client) {
+    char c = client.read();
+    Serial.println();
+    header += c;
+  }
+
   Serial.print("The current power state is: ");
   if (isPoweredOn()) {
     Serial.println("on");

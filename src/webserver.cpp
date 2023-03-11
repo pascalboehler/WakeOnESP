@@ -30,10 +30,13 @@ void WebServer::genBody(bool isOn) {
     WebServer::body += "<h3>The system is currently turned ";
     if (isOn) {
         WebServer::body += "on</h2>";
-
+        WebServer::body += "<p><a href=\"/pc/off\"><button class=\"button\">Turn Off</button></a></p>";
     } else {
         WebServer::body += "off</h3>";
+        WebServer::body += "<p><a href=\"/pc/on\"><button class=\"button\">Turn On</button></a></p>";
     }
+
+    
 
     WebServer::body += "</body>";
     
