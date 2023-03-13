@@ -14,8 +14,8 @@ int DataHelper::initFS() {
 }
 
 int DataHelper::loadDotEnv() {
-   // File file = SPIFFS.open("/.env");
-   File file = SPIFFS.open("/test.txt");
+   File file = SPIFFS.open("/.env");
+   //File file = SPIFFS.open("/test.txt");
 
     if(!file) {
         Serial.println("ERROR: ABORT MISSION. COULD NOT LOAD FILE");
@@ -26,9 +26,12 @@ int DataHelper::loadDotEnv() {
 
     Serial.println("The file content");
     while (file.available()) {
-        Serial.print(file.read());
+        
+        Serial.print(file.readString());
+        Serial.print(" ");
     }
     file.close();
+    Serial.println("");
     return 0;
 }
 
