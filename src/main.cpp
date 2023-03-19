@@ -52,21 +52,9 @@ void setup() {
 
   Serial.println("Starting up system...");
 
-  Serial.println("Initializing PFISS...");
+  Serial.println("Initializing SPFISS...");
 
-  if (datahelper.initFS() == 0) {
-    Serial.println("Initalized FS");
-  } else {
-    Serial.println("Error occured initializing, abording startup");
-    return;
-  }
-
-  if (datahelper.loadDotEnv() == 0) {
-    Serial.println("Loaded environment file");
-  } else {
-    Serial.println("Error loading environment files, aborting");
-    return;
-  }
+  datahelper = DataHelper();
 
   Serial.println("Connecting to WiFi...");
 
