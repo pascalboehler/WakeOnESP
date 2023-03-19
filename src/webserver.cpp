@@ -36,8 +36,6 @@ void WebServer::genBody(bool isOn) {
         WebServer::body += "<p><a href=\"/pc/on\"><button class=\"button\">Turn On</button></a></p>";
     }
 
-    
-
     WebServer::body += "</body>";
     
 }

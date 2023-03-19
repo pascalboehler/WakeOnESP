@@ -39,18 +39,13 @@ int DataHelper::loadDotEnv() {
     Serial.println("The file content");
     while (file.available()) {
         String curr = file.readStringUntil('\n');
-        Serial.print(curr);
-        Serial.println();
         rawData.push_back(curr.c_str()); // conv to cpp string and add it to the list
     }
     file.close();
-    Serial.println("");
     dotEnvContent = parseDotEnvToMap(rawData); // convert it 
     if (dotEnvContent.size() == 0) { // it can not be empty, so if it is, error out
         return -1;
     }
-    Serial.println(dotEnvContent.at("ssid").c_str());
-    Serial.println("SUCCESS");
     return 0;
 }
 
@@ -59,12 +54,8 @@ std::map<std::string, std::string> DataHelper::parseDotEnvToMap(std::list<std::s
     std::map<std::string, std::string> data;
     for (std::string currLine : rawData) {
         std::string key = currLine.substr(0, currLine.find("="));
-        Serial.print(key.c_str()); // print out value for eval
-        Serial.print(": ");
         std::string value = currLine.substr(currLine.find("=") + 1);
-        Serial.println(value.c_str());
         data.insert({key, value});
-
     }
     return data;
 }
