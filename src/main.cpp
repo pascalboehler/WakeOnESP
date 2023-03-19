@@ -60,18 +60,11 @@ void setup() {
 
   Serial.println("Loading credentials...");
 
-  std::array<char*, 2> credentials = datahelper.getWiFiCredentials();
-
-  char* ssid = credentials[0];
-  char* pass = credentials[0];
-
-  Serial.println(ssid);
-
-  Serial.println(pass);
+  std::array<std::string, 2> credentials = datahelper.getWiFiCredentials();
 
   Serial.print("Connecting");
 
-  WiFi.begin(ssid, pass);
+  WiFi.begin(credentials[0].c_str(), credentials[1].c_str());
 
   while(WiFi.status() != WL_CONNECTED) {
     delay(500);

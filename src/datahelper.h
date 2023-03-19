@@ -8,7 +8,7 @@
 class DataHelper {
 public:
     DataHelper();
-    std::array<char*, 2> getWiFiCredentials();
+    std::array<std::string, 2> getWiFiCredentials();
     std::string getDotEnvFile();
 private:
     std::map<std::string, std::string> dotEnvContent;

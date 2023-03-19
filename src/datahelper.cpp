@@ -38,9 +38,9 @@ int DataHelper::loadDotEnv() {
     std::list<std::string> rawData;
     Serial.println("The file content");
     while (file.available()) {
-        String curr = file.readString();
+        String curr = file.readStringUntil('\n');
         Serial.print(curr);
-        Serial.print(" ");
+        Serial.println();
         rawData.push_back(curr.c_str()); // conv to cpp string and add it to the list
     }
     file.close();
@@ -49,17 +49,28 @@ int DataHelper::loadDotEnv() {
     if (dotEnvContent.size() == 0) { // it can not be empty, so if it is, error out
         return -1;
     }
+    Serial.println(dotEnvContent.at("ssid").c_str());
+    Serial.println("SUCCESS");
     return 0;
 }
 
 std::map<std::string, std::string> DataHelper::parseDotEnvToMap(std::list<std::string> rawData) {
+    Serial.println(rawData.size());
+    std::map<std::string, std::string> data;
     for (std::string currLine : rawData) {
-        Serial.println(currLine.c_str());
-        
+        std::string key = currLine.substr(0, currLine.find("="));
+        Serial.print(key.c_str()); // print out value for eval
+        Serial.print(": ");
+        std::string value = currLine.substr(currLine.find("=") + 1);
+        Serial.println(value.c_str());
+        data.insert({key, value});
+
     }
-    return {};
+    return data;
 }
 
-std::array<char*, 2> DataHelper::getWiFiCredentials() {
-    return {"123", "345"};
+std::array<std::string, 2> DataHelper::getWiFiCredentials() {
+    std::string ssid = dotEnvContent.at("ssid");
+    std::string pass = dotEnvContent.at("pass");
+    return {ssid, pass};
 }
